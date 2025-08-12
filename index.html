@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./app/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Transaction Management</title>
+</head>
+
+<body class="p-4">
+    <h1 class="mb-4">Transaction Management</h1>
+
+    <!-- Transaction Form -->
+    <form id="transactionForm" class="mb-4">
+        <input type="hidden" id="id_transaction">
+        <div class="row g-3">
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="client" placeholder="Client" required>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="bills" placeholder="Bill" required>
+            </div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" id="transaction_date" required>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="service" placeholder="Service" required>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" id="platform" required>
+                    <option value="">Platform</option>
+                    <option value="1">Nequi</option>
+                    <option value="2">Bancolombia</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" id="status" required>
+                    <option value="">Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Failed">Failed</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Save</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Transaction Table -->
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Bill</th>
+                <th>Date</th>
+                <th>Service</th>
+                <th>Platform</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="tableTransactions">
+            <!-- Example row with functional actions -->
+            <tr>
+                <td>1</td>
+                <td>John Doe</td>
+                <td>33550336</td>
+                <td>2025-08-12</td>
+                <td>Internet</td>
+                <td>Nequi</td>
+                <td>Pending</td>
+                <td>
+                    <button class="btn btn-warning btn-sm btn-edit" data-id="1">Edit</button>
+                    <button class="btn btn-danger btn-sm btn-delete" data-id="1">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // Example: Functional Edit and Delete for the static row
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.onclick = function () {
+                    alert('Edit action for transaction ID: ' + btn.getAttribute('data-id'));
+                    // Here you would call your editTransaction function
+                };
+            });
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.onclick = function () {
+                    if (confirm('Are you sure you want to delete transaction ID: ' + btn.getAttribute('data-id') + '?')) {
+                        alert('Deleted transaction ID: ' + btn.getAttribute('data-id'));
+                        // Here you would call your deleteTransaction function
+                    }
+                };
+            });
+        });
+    </script>
+    <script type="module" src="./app/js/script.js"></script>
+</body>
+
+</html>
