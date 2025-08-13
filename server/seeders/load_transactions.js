@@ -2,11 +2,7 @@
 import fs from 'fs'; // Allows reading files
 import path from 'path'; // Shows the current path
 import csv from 'csv-parser';
-import { pool } from "../dB.js"; // Import the database connection/* Loads transactions into the database */
-import fs from 'fs'; // Allows reading files
-import path from 'path'; // Shows the current path
-import csv from 'csv-parser';
-import { pool } from "../connection_db.js";
+import { pool } from "../connection.js";
 
 
 export async function loadTransactionsToDatabase() {
@@ -19,11 +15,12 @@ export async function loadTransactionsToDatabase() {
             .pipe(csv())
             .on("data", (row) => {
                 transactions.push([
-                    row.id_transaction,
-                    row.amount,
-                    row.type,
-                    row.date,
-                    row.client_id
+                    row.id_transactions,
+                    row.identification_numero,
+                    row.client_name,
+                    row.address,
+                    row.phone,
+                    row.email,
                 ]);
             })
             .on('end', async () => {
