@@ -1,5 +1,5 @@
-import { loadBillsToDatabase } from "./load_bills.js";
-import { loadTransactionsToDatabase } from "./load_transactions.js";
+// import { loadBillsToDatabase } from "./load_bills.js";
+// import { loadTransactionsToDatabase } from "./load_transactions.js";
 import { loadClientsToDatabase } from "./load_clients.js";
 
 (async () => {
@@ -7,8 +7,8 @@ import { loadClientsToDatabase } from "./load_clients.js";
         console.log('Starting seeders...');
 
         await loadClientsToDatabase();
-        await loadBillsToDatabase();
-        await loadTransactionsToDatabase();
+        // await loadBillsToDatabase();
+        // await loadTransactionsToDatabase();
 
         console.log('✅ All seeders executed successfully.');
     } catch (error) {
