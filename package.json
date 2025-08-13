@@ -1,21 +1,27 @@
 {
-  "name": "payment-system",
-  "private": true,
+  "name": "prueba_m4-main",
   "version": "1.0.0",
-  "type": "module",
+  "description": "• Name: [Samuel Reyes Castro ☝️🤓]  • Clan: [Macondo]  • Email: [samuelreyescastro456@gmail.com]   • GitHub: [reyesuwu461](https://github.com/reyesuwu461)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server/index.js"
   },
-  "devDependencies": {
-    "vite": "^7.0.4"
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "mysql2": "^3.14.3"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.10"
   }
 }
