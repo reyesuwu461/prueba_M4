@@ -2,7 +2,7 @@
 import fs from 'fs'; // Allows reading files
 import path from 'path'; // Shows the current path
 import csv from 'csv-parser';
-import { pool } from "../connection_db.js";
+import { pool } from "../connection.js";
 
 
 export async function loadBillsToDatabase() {
@@ -15,11 +15,12 @@ export async function loadBillsToDatabase() {
             .pipe(csv())
             .on("data", (row) => {
                 bills.push([
-                    row.id_bill,
-                    row.client_id,
-                    row.amount,
-                    row.date_issued,
-                    row.status
+                    row.id_bills,
+                    row.identification_numero,
+                    row.client_name,
+                    row.address,
+                    row.phone,
+                    row.email,  
                 ]);
             })
             .on('end', async () => {
