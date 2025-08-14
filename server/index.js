@@ -1,6 +1,6 @@
 import cors from "cors";
 import express from "express";
-import { pool } from "./connection.js"; // Asegúrate de que este import sea correcto
+import { pool } from "./connection.js"; 
 import morgan from "morgan";
 
 const app = express();
@@ -91,7 +91,6 @@ app.put('/clients/:id_client', async (req, res) => {
     try {
         const { id_client } = req.params;
         const {
-            identification_numero,
             client_name,
             address,
             phone,
@@ -101,7 +100,6 @@ app.put('/clients/:id_client', async (req, res) => {
         // Uso de comillas invertidas para toda la consulta de actualización.
         const query = `
             UPDATE \`clients\` SET 
-                \`identification_numero\`= ?,
                 \`client_name\` = ?,
                 \`address\` = ?,
                 \`phone\` = ?,
@@ -109,7 +107,6 @@ app.put('/clients/:id_client', async (req, res) => {
             WHERE \`id_client\` = ?
         `;
         const values = [
-            identification_numero,
             client_name,
             address,
             phone,
