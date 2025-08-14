@@ -1,13 +1,8 @@
 // Transaction Management - CRUD
 
-const API_URL = "http://localhost:3000/transactions";
+const API_URL = "http://localhost:3000/clients";
 const tableTransactions = document.getElementById("tableTransactions");
 const transactionForm = document.getElementById("transactionForm");
-
-// Backend URLs to load data
-const LOAD_CLIENTS_URL = "http://localhost:3000/load-clients";
-const LOAD_BILLS_URL = "http://localhost:3000/load-bills";
-const LOAD_TRANSACTIONS_URL = "http://localhost:3000/load-transactions";
 
 // Render static options for status
 function renderStatusOptions() {
@@ -30,36 +25,23 @@ function renderPlatformOptions() {
     `;
 }
 
-// Render static options for clients (can be replaced with dynamic)
-function renderClientOptions() {}
+// Render static options for clients (example, can be replaced with dynamic)
+function renderClientOptions() {
 
-// Render static options for bills (can be replaced with dynamic)
-function renderBillOptions() {}
+}
 
-// Load data from backend before rendering the table
-async function loadInitialData() {
-    try {
-        console.log("⏳ Loading clients...");
-        await fetch(LOAD_CLIENTS_URL);
-
-        console.log("⏳ Loading bills...");
-        await fetch(LOAD_BILLS_URL);
-
-        console.log("⏳ Loading transactions...");
-        await fetch(LOAD_TRANSACTIONS_URL);
-
-        console.log("✅ Data loaded successfully!");
-    } catch (error) {
-        console.error("❌ Error loading initial data:", error);
-    }
+// Render static options for bills (example, can be replaced with dynamic)
+function renderBillOptions() {
 }
 
 // Load transactions from API and render table
 async function loadTransactions() {
     try {
         const res = await fetch(API_URL);
+        
         const data = await res.json();
-
+        
+        // Clear and create table header
         tableTransactions.innerHTML = "";
         data.forEach(t => {
             const row = document.createElement('tr');
@@ -79,27 +61,42 @@ async function loadTransactions() {
             tableTransactions.appendChild(row);
         });
 
+        // Attach event listeners
         attachEventListeners();
     } catch (error) {
         console.error("Error loading transactions:", error);
-    }
 }
 
+// Helper to convert status id to text
 function getStatusText(id_status) {
-    const statusMap = { 1: "Pending", 2: "Completed", 3: "Failed" };
+    const statusMap = {
+        1: "Pending",
+        2: "Completed",
+        3: "Failed"
+    };
     return statusMap[id_status] || "";
 }
 
+// Helper to convert status text to id
 function getStatusId(status) {
-    const statusMap = { "Pending": 1, "Completed": 2, "Failed": 3 };
-    return statusMap[status] || 1;
+    const statusMap = {
+        "Pending": 1,
+        "Completed": 2,
+        "Failed": 3
+    };
+    return statusMap[status] || 1; // Default to Pending
 }
 
+// Helper to convert platform id to text
 function getPlatformText(id_platform) {
-    const platformMap = { 1: "Nequi", 2: "Bancolombia" };
+    const platformMap = {
+        1: "Nequi",
+        2: "Bancolombia"
+    };
     return platformMap[id_platform] || "";
 }
 
+// Attach event listeners to edit and delete buttons
 function attachEventListeners() {
     document.querySelectorAll('.btn-edit').forEach(btn => {
         btn.addEventListener('click', async () => {
@@ -116,6 +113,7 @@ function attachEventListeners() {
     });
 }
 
+// Save or update transaction
 transactionForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -137,7 +135,7 @@ transactionForm.addEventListener("submit", async (e) => {
         const url = id_transaction ? `${API_URL}/${id_transaction}` : API_URL;
         
         const response = await fetch(url, {
-            method,
+            method: method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
         });
@@ -154,6 +152,7 @@ transactionForm.addEventListener("submit", async (e) => {
     }
 });
 
+// Edit transaction
 async function editTransaction(id) {
     try {
         const response = await fetch(`${API_URL}/${id}`);
@@ -161,6 +160,7 @@ async function editTransaction(id) {
         
         const t = await response.json();
         
+        // Fill the form with transaction data
         document.getElementById("id_transaction").value = t.id_transaction || '';
         document.getElementById("client").value = t.client || '';
         document.getElementById("bills").value = t.bill_number || '';
@@ -169,6 +169,7 @@ async function editTransaction(id) {
         document.getElementById("platform").value = t.id_platform || '';
         document.getElementById("status").value = getStatusText(t.id_status);
         
+        // Scroll to form for better UX
         transactionForm.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
         console.error("Error loading transaction:", error);
@@ -176,11 +177,15 @@ async function editTransaction(id) {
     }
 }
 
+// Delete transaction
 async function deleteTransaction(id) {
     if (!confirm("Are you sure you want to delete this transaction?")) return;
 
     try {
-        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        const response = await fetch(`${API_URL}/${id}`, { 
+            method: "DELETE" 
+        });
+        
         if (!response.ok) throw new Error('Failed to delete transaction');
         
         await loadTransactions();
@@ -191,17 +196,15 @@ async function deleteTransaction(id) {
     }
 }
 
-async function init() {
+// Initialize the application
+function init() {
     renderStatusOptions();
     renderPlatformOptions();
-    renderClientOptions();
-    renderBillOptions();
-
-    // 1. Load initial data to backend
-    await loadInitialData();
-
-    // 2. Load table
-    await loadTransactions();
+    loadTransactions();
 }
 
+// Start the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
+renderClientOptions();
+renderBillOptions();
+}   
