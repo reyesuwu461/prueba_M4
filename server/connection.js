@@ -8,12 +8,12 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure that dotenv reads the .env file from the project root
-// __dirname refers to the 'server' folder, so we go up one level ('..')
+// Aseguramos que dotenv lea el archivo .env desde la raíz del proyecto
+// __dirname se refiere a la carpeta 'server', así que subimos un nivel ('..')
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
 
-// Create a connection pool to the database.
+// Crea un "pool" de conexiones a la base de datos.
 export const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -24,27 +24,27 @@ export const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Message to verify that the variables were loaded
-console.log(`✅ Connecting to database: '${process.env.DB_NAME}' at '${process.env.DB_HOST}'`);
+// Mensaje para verificar que las variables se cargaron
+console.log(`✅ Conectando a la base de datos: '${process.env.DB_NAME}' en '${process.env.DB_HOST}'`);
 
-// Function to test the connection
+// Función para probar la conexión
 async function testConnection() {
     try {
         const connection = await pool.getConnection();
-        console.log('✅ Database connection successful.');
-        connection.release(); // Return the connection to the pool
+        console.log('✅ Conexión a la base de datos exitosa.');
+        connection.release(); // Devuelve la conexión al pool
     } catch (error) {
-        // If there is an error, show it clearly
-        console.error('❌ Fatal error connecting to the database:', error.message);
+        // Si hay un error, lo mostramos de forma clara
+        console.error('❌ Error fatal al conectar con la base de datos:', error.message);
         if (error.code === 'ER_BAD_DB_ERROR') {
-            console.error(`Error: The database '${process.env.DB_NAME}' does not exist.`);
+            console.error(`Error: La base de datos '${process.env.DB_NAME}' no existe.`);
         } else if (error.code === 'ER_ACCESS_DENIED_ERROR') {
-            console.error(`Error: Access denied for user '${process.env.DB_USER}'. Check your credentials.`);
+            console.error(`Error: Acceso denegado para el usuario '${process.env.DB_USER}'. Revisa tus credenciales.`);
         }
-        // Close the process if it cannot connect, since nothing else will work.
+        // Cierra el proceso si no se puede conectar, ya que nada más funcionará.
         process.exit(1); 
     }
 }
 
-// Test the connection when starting the application
+// Probamos la conexión al iniciar la aplicación
 testConnection();
