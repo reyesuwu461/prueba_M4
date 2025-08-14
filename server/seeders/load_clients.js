@@ -1,25 +1,26 @@
 /* Loads clients into the database */
-import fs from 'fs'; // Allows reading files
-import path from 'path'; // Shows the current path
-import { fileURLToPath } from 'url'; // Needed to get __dirname in ES modules
+import fs from 'fs'; // Permite leer archivos
+import path from 'path'; // Muestra la ruta actual
+import { fileURLToPath } from 'url'; // Necesario para obtener __dirname en módulos ES
 import csv from 'csv-parser';
 import { pool } from "../connection.js";
 
+// Obtenemos la ruta del directorio actual (__dirname) en un módulo ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function loadClientsToDatabase() {
     const filePath = path.join(__dirname, '..', 'data', '01_clients.csv');
-    console.log('File path:', filePath); 
+    console.log('Ruta del archivo:', filePath); // Depuración
     const clients = [];
 
     return new Promise((resolve, reject) => {
         fs.createReadStream(filePath)
             .on('error', (err) => {
-                console.error('❌ Error reading the clients CSV file:', err.message);
+                console.error('❌ Error al leer el archivo CSV de clientes:', err.message);
                 reject(err);
             })
-
+           
             .pipe(csv({
                 mapHeaders: ({ header, index }) => {
                     const headers = [
@@ -32,6 +33,7 @@ export async function loadClientsToDatabase() {
                     return headers[index];
                 }
             }))
+   
 
             .on("data", (row) => {
                 if (row.identification_numero) {
@@ -46,7 +48,7 @@ export async function loadClientsToDatabase() {
             })
             .on('end', async () => {
                 if (clients.length === 0) {
-                    console.log('⚠️ No valid clients found in the CSV file to insert.');
+                    console.log('⚠️ No se encontraron clientes válidos en el archivo CSV para insertar.');
                     return resolve();
                 }
 
@@ -54,16 +56,17 @@ export async function loadClientsToDatabase() {
                     const sql = 'INSERT INTO clients (identification_numero, client_name, address, phone, email) VALUES ?';
                     const [result] = await pool.query(sql, [clients]);
 
-                    console.log(`✅ Inserted ${result.affectedRows} clients.`);
+                    console.log(`✅ Se insertaron ${result.affectedRows} clientes.`);
                     resolve();
                 } catch (error) {
-                    console.error('❌ Error inserting clients:', error.message);
-                    console.error('--> Problematic data (first row):', clients[0]);
+                    console.error('❌ Error al insertar clientes:', error.message);
+                    // Opcional: Mostrar la primera fila que pudo causar el error
+                    console.error('--> Datos problemáticos (primera fila):', clients[0]);
                     reject(error);
                 }
             })
             .on('error', (err) => {
-                console.error('❌ Error processing the clients CSV file:', err.message);
+                console.error('❌ Error al procesar el archivo CSV de clientes:', err.message);
                 reject(err);
             });
     });
